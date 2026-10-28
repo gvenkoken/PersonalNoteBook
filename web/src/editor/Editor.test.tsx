@@ -75,3 +75,23 @@ it('shows loading and the full saved title and update timestamp', () => {
   expect(screen.getByText('Notlar yükleniyor…')).toBeTruthy()
   expect(screen.getByRole('tab').title).toBe('Uzun not başlığı\nGüncelleme: 2026-10-28T10:00:00Z')
 })
+
+it('closes a menu after a command, keeps one menu open at a time, and closes on outside click or Escape', () => {
+  setup()
+  const navigation = screen.getByRole('navigation', { name: 'Ana menü' })
+  const menus = Array.from(navigation.querySelectorAll('details'))
+  const [file, edit] = menus
+  file.setAttribute('open', '')
+  edit.setAttribute('open', '')
+  fireEvent.click(edit.querySelector('summary')!)
+  expect(file.hasAttribute('open')).toBe(false) // opening another menu closes the first
+  edit.setAttribute('open', '')
+  fireEvent.click(within(edit).getByRole('button', { name: 'Tümünü Seç' }))
+  expect(edit.hasAttribute('open')).toBe(false) // a chosen command closes its menu
+  file.setAttribute('open', '')
+  fireEvent.pointerDown(document.body)
+  expect(file.hasAttribute('open')).toBe(false)
+  file.setAttribute('open', '')
+  fireEvent.keyDown(document, { key: 'Escape' })
+  expect(file.hasAttribute('open')).toBe(false)
+})

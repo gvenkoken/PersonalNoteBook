@@ -1,4 +1,5 @@
 using NotDefteri.Api.Data;
+using NotDefteri.Api.Features.Notes;
 using NotDefteri.Api.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 
@@ -33,6 +34,7 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions { Predicate = check 
 
 // Every feature registers its own endpoints (see IEndpointModule); generated slices need no edit here.
 app.MapEndpointModules(typeof(Program).Assembly);
+app.MapNotes();
 
 app.Run();
 

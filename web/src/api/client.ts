@@ -16,6 +16,13 @@ export class ApiError extends Error {
   }
 }
 
+export class NoteTitleConflictError extends ApiError {
+  constructor(problem: Problem) {
+    super(409, problem)
+    this.name = 'NoteTitleConflictError'
+  }
+}
+
 // The application's sign-in code provides the current access token (or null); it is never stored here. The names
 // below deliberately avoid the word "token" before a colon or equals sign, which the Factory's credential scanner reads
 // as an assigned secret.
@@ -36,6 +43,7 @@ export async function api<T>(path: string, init?: RequestInit): Promise<T> {
   })
   if (!response.ok) {
     const problem = (await response.json().catch(() => ({}))) as Problem
+    if (response.status === 409) throw new NoteTitleConflictError(problem)
     throw new ApiError(response.status, problem)
   }
   return (response.status === 204 ? undefined : await response.json()) as T

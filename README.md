@@ -47,6 +47,19 @@ API platform testleri bellek içi SQLite kullanır. PostgreSQL testi isteğe ba�
 silinip yeniden oluşturulabilecek ayrı bir test veritabanını göstermelidir;
 ilgili test veritabanını siler ve yeniden oluşturur.
 
+## Docker ile çalıştırma
+
+Uygulamanın tamamı (PostgreSQL, API ve web) tek komutla çalışır:
+
+1. `cp .env.example .env` ve `.env` içinde `POSTGRES_PASSWORD` değerini yalnızca yerel kullanım için ayarlayın (isteğe bağlı `APP_PORT`).
+2. `docker compose up -d --build`
+3. http://127.0.0.1:8080 adresini (veya `APP_PORT`) açın. Web konteyneri `/api` ve `/health` isteklerini API'ye yönlendirir;
+   bekleyen veritabanı migration'ları API açılırken uygulanır.
+
+Yalnızca web portu 127.0.0.1 üzerinde yayınlanır. `docker compose down -v` konteynerleri ve veritabanı birimini siler.
+Konteyner dışında API'yi compose veritabanına bağlamak için portu yerel ve commit'lenmeyen bir `compose.override.yaml`
+ile açın (`services: { postgres: { ports: [ "127.0.0.1:5432:5432" ] } }`).
+
 ## Yerel çalıştırma
 
 Yerel PostgreSQL sunucusu `localhost:5432` üzerinde çalışmalıdır. Kullanılacak

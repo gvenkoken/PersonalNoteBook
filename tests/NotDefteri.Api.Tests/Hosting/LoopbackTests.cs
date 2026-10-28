@@ -196,7 +196,9 @@ public sealed class LoopbackTests
             var entries = line[(line.IndexOf('[') + 1)..line.LastIndexOf(']')].Split(',');
             foreach (var entry in entries)
             {
-                var mapping = entry.Trim().Trim('"', '\'').Split(':');
+                // A port may come from the environment with a default ("${APP_PORT:-8080}"); the default is what is checked.
+                var resolved = System.Text.RegularExpressions.Regex.Replace(entry.Trim().Trim('"', '\''), @"\$\{[A-Z_][A-Z0-9_]*:-(\d+)\}", "$1");
+                var mapping = resolved.Split(':');
                 Assert.Equal(3, mapping.Length);
                 Assert.Equal("127.0.0.1", mapping[0]);
                 Assert.InRange(int.Parse(mapping[1]), 1, 65535);

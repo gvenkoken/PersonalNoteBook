@@ -1,4 +1,5 @@
-# API image. The web app is built separately (npm run build) and served by any static host or reverse proxy.
+# API image (build context: repository root). The web client has its own image (web/Dockerfile); compose.yaml runs
+# both with PostgreSQL.
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY Directory.Build.props NotDefteri.sln ./

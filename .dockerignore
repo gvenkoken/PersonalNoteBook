@@ -1,0 +1,12 @@
+# Keeps the build context small: dependencies and build output are recreated inside the images, local settings never
+# leave the machine.
+**/node_modules
+**/bin
+**/obj
+**/dist
+**/TestResults
+**/coverage
+.git
+.env*
+.vs
+.idea

@@ -1,15 +1,38 @@
-# Local development database only; published ports must bind to host loopback.
+# The whole app: PostgreSQL, the API and the web client (nginx, which also proxies /api and /health to the API).
+# Only the web port is published, and only on 127.0.0.1. POSTGRES_PASSWORD (required) and APP_PORT (optional, default
+# 8080) come from the environment or a local .env file (see .env.example). The database and the API publish no ports.
 services:
   postgres:
     image: postgres:16
-    environment:
-      POSTGRES_DB: notdefteri
-      POSTGRES_USER: notdefteri
-    env_file: [ .env ] # provides the database password (see .env.example)
-    ports: [ "127.0.0.1:5432:5432" ]
+    environment: [ "POSTGRES_DB=notdefteri", "POSTGRES_USER=notdefteri", "POSTGRES_PASSWORD" ]
     volumes: [ "postgres-data:/var/lib/postgresql/data" ]
     healthcheck:
       test: [ "CMD-SHELL", "pg_isready -U notdefteri -d notdefteri" ]
+      interval: 5s
+      retries: 10
+  api:
+    build: { context: ., dockerfile: Dockerfile }
+    # The connection is assembled from its parts (see Data/DataRegistration.cs); pending migrations run at startup.
+    # appsettings.json binds Kestrel to loopback for local runs; inside the container the API listens on the container
+    # network only (it publishes no host port; nginx in the web container is the only way in).
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Production
+      - Kestrel__Endpoints__HttpIPv4__Url=http://0.0.0.0:8080
+      - Kestrel__Endpoints__HttpIPv6__Url=http://[::1]:8081
+      - Database__Host=postgres
+      - Database__Name=notdefteri
+      - Database__User=notdefteri
+      - POSTGRES_PASSWORD
+      - Database__MigrateOnStartup=true
+    expose: [ "8080" ]
+    depends_on:
+      postgres: { condition: service_healthy }
+  web:
+    build: { context: ., dockerfile: web/Dockerfile }
+    ports: [ "127.0.0.1:${APP_PORT:-8080}:8080" ]
+    depends_on: [ api ]
+    healthcheck:
+      test: [ "CMD", "wget", "-q", "--spider", "http://127.0.0.1:8080/" ]
       interval: 5s
       retries: 10
 volumes:

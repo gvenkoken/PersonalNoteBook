@@ -23,6 +23,17 @@ export function Editor({ store, loading = false, updatedAt = {}, integrated = fa
   const [preview, setPreview] = useState<ExportFormat | null>(null)
   const trigger = useRef<HTMLElement | null>(null)
   const previewTrigger = useRef<HTMLElement | null>(null)
+  // Menu bar: a chosen command closes its menu, only one menu is open at a time, and a click outside or Escape closes it.
+  const menus = useRef<HTMLElement | null>(null)
+  const closeMenus = (except?: Element | null) =>
+    menus.current?.querySelectorAll('details[open]').forEach(menu => { if (menu !== except) menu.removeAttribute('open') })
+  useEffect(() => {
+    const outside = (event: PointerEvent) => { if (!menus.current?.contains(event.target as Node)) closeMenus() }
+    const escape = (event: KeyboardEvent) => { if (event.key === 'Escape') closeMenus() }
+    document.addEventListener('pointerdown', outside)
+    document.addEventListener('keydown', escape)
+    return () => { document.removeEventListener('pointerdown', outside); document.removeEventListener('keydown', escape) }
+  }, [])
   const save = useSave(store, !integrated || loading || (dialog && dialog !== 'close') ? undefined : active?.key)
   const modal = Boolean(dialog || save.namingTab)
   function cancel() { setDialog(null); setClosingKey(null); save.cancelNaming() }
@@ -57,7 +68,11 @@ export function Editor({ store, loading = false, updatedAt = {}, integrated = fa
       if (!modal && (event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') trigger.current = event.target as HTMLElement
     }}>
     <header><h1>NotDefteri</h1></header>
-    <nav className="menus" aria-label="Ana menü">
+    <nav className="menus" aria-label="Ana menü" ref={menus} onClick={event => {
+      const target = event.target as Element
+      if (target.closest('.menu-items button')) closeMenus()
+      else if (target.closest('summary')) closeMenus(target.closest('details'))
+    }}>
       <details><summary>Dosya</summary><div className="menu-items">
         <button onClick={create} disabled={loading || modal}>Yeni</button>
         {integrated && <button disabled={loading || modal} onClick={event => { trigger.current = event.currentTarget; setDialog('open') }}>Aç</button>}

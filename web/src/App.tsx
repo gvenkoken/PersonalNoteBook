@@ -32,7 +32,7 @@ export function App() {
   }, [])
   return (
     <>
-      <Editor store={store} loading={loading} updatedAt={updatedAt} />
+      <Editor store={store} loading={loading} updatedAt={updatedAt} integrated />
       {restoreError && <p role="alert">Önceki notlar yüklenemedi. Sayfayı yenileyerek tekrar deneyin.</p>}
       <p className="api-status" role="status">API: {status}</p>
     </>

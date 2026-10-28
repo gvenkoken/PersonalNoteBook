@@ -1,0 +1,21 @@
+.delete-note-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: rgb(0 0 0 / 55%);
+}
+
+.delete-note-dialog {
+  max-width: min(28rem, 90vw);
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  background: #fff;
+  color: #202020;
+  overflow-wrap: anywhere;
+}
+
+.delete-note-dialog button { margin: 0.25rem; }
+.delete-note-dialog .delete-note-confirm { background: #b42318; color: #fff; }
+.delete-note-dialog button:disabled { opacity: 0.6; }

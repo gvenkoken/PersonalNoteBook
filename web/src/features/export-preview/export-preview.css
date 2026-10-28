@@ -1,0 +1,14 @@
+.export-preview-layout { display: grid; grid-template-columns: minmax(0, 1fr); }
+.export-preview-layout.export-preview-open { grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); }
+.export-preview-editor { min-width: 0; }
+.export-preview-panel { min-width: 0; padding: 1rem; border: 1px solid #cbd5e1; background: #f8fafc; color: #172033; }
+.export-preview-panel header { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.export-preview-panel h2 { font-size: 1.1rem; }
+.export-preview-panel h3 { overflow-wrap: anywhere; }
+.export-preview-panel label { margin-right: .5rem; }
+.export-preview-panel button { cursor: pointer; overflow-wrap: anywhere; }
+.export-preview-source { font-family: ui-monospace, Consolas, monospace; white-space: pre; overflow-x: auto; max-height: 65vh; padding: .75rem; background: white; border: 1px solid #cbd5e1; }
+@media (max-width: 700px) {
+  .export-preview-layout.export-preview-open { grid-template-columns: minmax(0, 1fr); }
+  .export-preview-panel { grid-column: 1; grid-row: 2; }
+}

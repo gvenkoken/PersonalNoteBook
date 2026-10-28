@@ -1,4 +1,4 @@
-# Local development database only.
+# Local development database only; published ports must bind to host loopback.
 services:
   postgres:
     image: postgres:16

@@ -1,0 +1,16 @@
+# Local development database only.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: notdefteri
+      POSTGRES_USER: notdefteri
+    env_file: [ .env ] # provides the database password (see .env.example)
+    ports: [ "127.0.0.1:5432:5432" ]
+    volumes: [ "postgres-data:/var/lib/postgresql/data" ]
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U notdefteri -d notdefteri" ]
+      interval: 5s
+      retries: 10
+volumes:
+  postgres-data:

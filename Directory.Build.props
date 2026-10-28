@@ -1,0 +1,9 @@
+<Project>
+  <!-- Shared settings. TargetFramework stays in each project file and output paths stay default: the Ideafactra verifier
+       reads them literally from the test project and runs bin/Release/<tfm>/<assembly>.dll directly. -->
+  <PropertyGroup>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+</Project>

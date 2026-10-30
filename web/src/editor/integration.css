@@ -1,9 +1,0 @@
-.integrated-editor { width: min(1200px, calc(100% - 32px)); margin: 24px auto; }
-.integrated-editor .workspace { width: 100%; margin: 0; }
-.integrated-editor .tabs > span { display: flex; flex-shrink: 0; }
-.editor-modal-scope { position: fixed; inset: 0; z-index: 10; display: grid; place-items: center; background: #17203366; }
-.editor-modal-scope [role="dialog"] { max-width: min(560px, calc(100vw - 32px)); max-height: calc(100dvh - 32px); overflow: auto; padding: 24px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); box-shadow: var(--shadow); }
-.editor-modal-scope button { margin: 8px 8px 0 0; }
-@media (max-width: 700px) {
-  .integrated-editor { width: 100%; margin: 0; }
-}
